@@ -1,0 +1,179 @@
+{% assign banners_count = 3 %}
+{% assign active_banners = 0 %}
+
+<div class="product-banners-slider-wrapper">
+  <div class="product-banners-slider slider-component">
+    <div class="slider">
+      {% for i in (1..banners_count) %}
+        {% assign banner_type_key = 'banner_' | append: i | append: '_type' %}
+        {% assign banner_image_key = 'banner_' | append: i | append: '_image' %}
+        {% assign banner_video_key = 'banner_' | append: i | append: '_video' %}
+        {% assign banner_heading_key = 'banner_' | append: i | append: '_heading' %}
+        {% assign banner_text_key = 'banner_' | append: i | append: '_text' %}
+
+        {% assign banner_type = product.metafields.custom[banner_type_key] %}
+        {% assign banner_image = product.metafields.custom[banner_image_key] %}
+        {% assign banner_video = product.metafields.custom[banner_video_key] %}
+        {% assign banner_heading = product.metafields.custom[banner_heading_key] %}
+        {% assign banner_text = product.metafields.custom[banner_text_key] %}
+
+        {% if banner_type != blank %}
+          {% assign active_banners = active_banners | plus: 1 %}
+          <div class="banner-slide slider__slide">
+            {% if banner_type == 'image' and banner_image != blank %}
+              <img src="{{ banner_image | image_url: width: 1600 }}" alt="{{ banner_heading | escape }}">
+            {% elsif banner_type == 'video' and banner_video != blank %}
+              <video autoplay loop muted playsinline>
+                <source src="{{ banner_video }}" type="video/mp4">
+                Your browser does not support the video tag.
+              </video>
+            {% endif %}
+
+            <div class="sliderContent">
+              {% if banner_heading != blank %}
+                <h2 style="font-size: {{ section.settings.heading_font_size }}px;">{{ banner_heading }}</h2>
+              {% endif %}
+              {% if banner_text != blank %}
+                <p style="font-size: {{ section.settings.text_font_size }}px;">{{ banner_text }}</p>
+              {% endif %}
+            </div>
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<style>
+  .product-banners-slider-wrapper {
+    width: 100%;
+    overflow: hidden;
+  }
+
+  .slider {
+    width: 100%;
+  }
+
+  .banner-slide img,
+  .banner-slide video {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .slider__slide {
+    position: relative;
+  }
+  
+  .sliderContent {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    text-align: center;
+    padding: 1rem;
+    max-width: 90%;
+  }
+
+  .product-banners-slider .banner-slide h2 {
+    font-size: {{ section.settings.heading_font_size }}px;
+    color: {{ section.settings.heading_color }};
+  }
+
+  .product-banners-slider .banner-slide p {
+    font-size: {{ section.settings.text_font_size }}px;
+    color: {{ section.settings.text_color }};
+  }
+
+  .sliderContent h2 {
+    margin: 0;
+  }
+
+  .sliderContent p {
+    margin-top: 0.5rem;
+  }
+
+  .slick-dots {
+    bottom: 1rem;
+  }
+
+  .slick-arrow {
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    z-index: 10;
+  }
+
+  @media (max-width: 767px) {
+    .product-banners-slider .banner-slide h2 {
+      font-size: {{ section.settings.heading_font_size | times: 0.7 | round }}px !important;
+    }
+    .product-banners-slider .banner-slide p {
+      font-size: {{ section.settings.text_font_size | times: 0.7 | round }}px !important;
+    }
+  }
+</style>
+
+{% if active_banners > 1 %}
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      if (window.jQuery && jQuery().slick) {
+        $('.product-banners-slider .slider').slick({
+          dots: true,
+          arrows: true,
+          autoplay: true,
+          autoplaySpeed: 5000,
+          adaptiveHeight: true
+        });
+      } else {
+        console.warn("Slick slider not loaded. Please include slick.min.js and slick.css.");
+      }
+    });
+  </script>
+{% endif %}
+
+{% schema %}
+{
+  "name": "Product Banners",
+  "settings": [
+    {
+      "type": "range",
+      "id": "heading_font_size",
+      "label": "Heading font size (px)",
+      "min": 12,
+      "max": 72,
+      "step": 1,
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "text_font_size",
+      "label": "Text font size (px)",
+      "min": 10,
+      "max": 48,
+      "step": 1,
+      "default": 16
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#000000"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product Banners",
+      "category": "Product"
+    }
+  ]
+}
+{% endschema %}

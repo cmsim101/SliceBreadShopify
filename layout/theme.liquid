@@ -39,6 +39,14 @@
       <script src="{{ 'animations.js' | asset_url }}" defer="defer"></script>
     {%- endif -%}
 
+    {% if template == 'product' %}
+      {{ 'https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css' | stylesheet_tag }}
+      {{ 'https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css' | stylesheet_tag }}
+    
+      {{ 'https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js' | script_tag }}
+      {{ 'https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js' | script_tag }}
+    {% endif %}
+
     {{ content_for_header }}
 
     {%- liquid
