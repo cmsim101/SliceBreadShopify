@@ -1,0 +1,95 @@
+<div class="page-width alsoBought">
+  <h2>Others Like You Also Bought</h2>
+
+  <div class="grid grid--2-col-desktop grid--1-col-mobile product-grid also-bought_wrapper">
+    {% assign shown_products = false %}
+
+    {% if section.settings.product_1 != blank or section.settings.product_2 != blank %}
+      {% assign shown_products = true %}
+
+      {% if section.settings.product_1 %}
+        {% assign product_1 = section.settings.product_1 %}
+        <div class="grid__item">
+          <a href="{{ product_1.url }}">
+            <img src="{{ product_1.featured_image | image_url }}" alt="{{ product_1.title }}" style="width: 100%;">
+            <h3>{{ product_1.title }}</h3>
+            <p>{{ product_1.price | money }}</p>
+            </a>
+        </div>
+      {% endif %}
+
+      {% if section.settings.product_2 %}
+        {% assign product_2 = section.settings.product_2 %}
+        <div class="grid__item">
+          <a href="{{ product_2.url }}">
+            <img src="{{ product_2.featured_image | image_url }}" alt="{{ product_2.title }}" style="width: 100%;">
+            <h3>{{ product_2.title }}</h3>
+            <p>{{ product_2.price | money }}</p>
+          </a>
+        </div>
+      {% endif %}
+
+    {% elsif section.settings.fallback_collection.products_count > 0 %}
+      {% assign shown_products = true %}
+      {% assign random_products = section.settings.fallback_collection.products | sample: 2 %}
+      {% for product in random_products %}
+        <div class="grid__item">
+          <a href="{{ product.url }}">
+            <img src="{{ product.featured_image | image_url }}" alt="{{ product.title }}" style="width: 100%;">
+            <h3>{{ product.title }}</h3>
+            <p>{{ product.price | money }}</p>
+          </a>
+        </div>
+      {% endfor %}
+    {% endif %}
+
+    {% unless shown_products %}
+      <p>No recommended products available to show.</p>
+    {% endunless %}
+  </div>
+</div>
+
+<style>
+  .alsoBought {
+      margin-top: 40px;  
+  }
+  
+  .also-bought_wrapper .grid__item a {
+      text-decoration: none;
+  }
+
+  .also-bought_wrapper .grid__item a h3 {
+      font-size: 24px;
+      text-transform: uppercase;
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Also Bought",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "product",
+      "id": "product_1",
+      "label": "Product 1"
+    },
+    {
+      "type": "product",
+      "id": "product_2",
+      "label": "Product 2"
+    },
+    {
+      "type": "collection",
+      "id": "fallback_collection",
+      "label": "Fallback Collection"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Also Bought"
+    }
+  ]
+}
+{% endschema %}
