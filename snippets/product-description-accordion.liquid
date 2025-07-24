@@ -1,0 +1,60 @@
+<style>
+  .accordion-wrapper {
+    border-top: 1px solid #ccc;
+  }
+
+  .accordion-item {
+    border-bottom: 1px solid #ccc;
+  }
+
+  .accordion-button {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    padding: 15px 0;
+    font-size: 20px;
+    font-weight: bold;
+    background: none;
+    border: none;
+    cursor: pointer;
+    text-align: left;
+    border-bottom: 1px solid #ccc;
+  }
+  
+  .accordion-button::after {
+    content: "+";
+    font-size: 1.2em;
+    position: absolute;
+    right: 1em;
+    top: 50%;
+    transform: translateY(-50%);
+    transition: transform 0.3s ease;
+  }
+  
+  .accordion-item.active .accordion-button::after {
+    content: "–"; /* en dash as minus */
+  }
+
+  .accordion-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+    padding: 0 1em;
+  }
+
+  .accordion-item.active .accordion-content {
+    max-height: 500px;
+  }
+</style>
+
+<div class="accordion-wrapper">
+  <div class="accordion-item active">
+    <button class="accordion-button" type="button" onclick="this.parentElement.classList.toggle('active')">
+      Details
+    </button>
+    <div class="accordion-content">
+      {{ product.description }}
+    </div>
+  </div>
+</div>
