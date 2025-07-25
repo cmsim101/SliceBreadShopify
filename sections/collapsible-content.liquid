@@ -28,7 +28,24 @@
               {{ section.settings.caption | escape }}
             </p>
           {% endif %}
-          {%- if section.settings.heading != blank -%}
+          {%- assign show_block = false -%}
+          {%- for block in section.blocks -%}
+            {%- assign metafield_value = product.metafields.custom.productinfo.value -%}
+            {%- assign use_metafield = block.settings.use_product_metafield -%}
+            {%- assign row_content = block.settings.row_content -%}
+            {%- assign page_content = block.settings.page -%}
+          
+            {%- if use_metafield and metafield_value != blank -%}
+              {%- assign show_block = true -%}
+            {%- elsif row_content != blank -%}
+              {%- assign show_block = true -%}
+            {%- elsif page_content != blank -%}
+              {%- assign show_block = true -%}
+            {%- else -%}
+              {%- assign show_block = false -%}
+            {%- endif -%}
+          {% endfor %}
+          {%- if show_block -%}
             <h2 class="collapsible-content__heading inline-richtext {{ section.settings.heading_size }}">
               {{ section.settings.heading }}
             </h2>
@@ -70,6 +87,22 @@
           {% endif %}
           <div class="grid__item">
             {%- for block in section.blocks -%}
+            {%- assign metafield_value = product.metafields.custom.productinfo.value -%}
+            {%- assign use_metafield = block.settings.use_product_metafield -%}
+            {%- assign row_content = block.settings.row_content -%}
+            {%- assign page_content = block.settings.page -%}
+          
+            {%- if use_metafield and metafield_value != blank -%}
+              {%- assign show_block = true -%}
+            {%- elsif row_content != blank -%}
+              {%- assign show_block = true -%}
+            {%- elsif page_content != blank -%}
+              {%- assign show_block = true -%}
+            {%- else -%}
+              {%- assign show_block = false -%}
+            {%- endif -%}
+
+            {%- if show_block -%}
               <div
                 class="accordion{% if section.settings.layout == 'row' %} content-container color-{{ section.settings.container_color_scheme }} gradient{% endif %}"
                 {{ block.shopify_attributes }}
@@ -93,17 +126,19 @@
                     role="region"
                     aria-labelledby="Summary-{{ block.id }}-{{ section.id }}"
                   >
-                    {%- if product and block.settings.use_product_metafield and product.metafields.custom.productinfo -%}
-                      {{ product.metafields.custom.productinfo.value }}
-                    {%- elsif block.settings.row_content != blank -%}
-                      {{ block.settings.row_content }}
-                    {%- elsif block.settings.page != blank -%}
-                      {{ block.settings.page.content }}
+                    {%- if use_metafield and metafield_value != blank -%}
+                      {{ metafield_value }}
+                    {%- elsif row_content != blank -%}
+                      {{ row_content }}
+                    {%- elsif page_content != blank -%}
+                      {{ page_content.content }}
                     {%- endif -%}
                   </div>
                 </details>
               </div>
-            {%- endfor -%}
+            {%- endif -%}
+          {%- endfor -%}
+
           </div>
         </div>
       </div>
