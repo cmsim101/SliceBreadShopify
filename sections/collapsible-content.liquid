@@ -93,8 +93,13 @@
                     role="region"
                     aria-labelledby="Summary-{{ block.id }}-{{ section.id }}"
                   >
-                    {{ block.settings.row_content }}
-                    {{ block.settings.page.content }}
+                    {%- if product and block.settings.use_product_metafield and product.metafields.custom.productinfo -%}
+                      {{ product.metafields.custom.productinfo.value }}
+                    {%- elsif block.settings.row_content != blank -%}
+                      {{ block.settings.row_content }}
+                    {%- elsif block.settings.page != blank -%}
+                      {{ block.settings.page.content }}
+                    {%- endif -%}
                   </div>
                 </details>
               </div>
@@ -296,6 +301,12 @@
           "id": "heading",
           "default": "t:sections.collapsible_content.blocks.collapsible_row.settings.heading.default",
           "label": "t:sections.collapsible_content.blocks.collapsible_row.settings.heading.label"
+        },
+        {
+          "type": "checkbox",
+          "id": "use_product_metafield",
+          "label": "Use product metafield (custom.productInfo)",
+          "default": false
         },
         {
           "type": "select",
