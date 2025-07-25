@@ -10,12 +10,16 @@
         {% assign banner_video_key = 'banner_' | append: i | append: '_video' %}
         {% assign banner_heading_key = 'banner_' | append: i | append: '_heading' %}
         {% assign banner_text_key = 'banner_' | append: i | append: '_text' %}
+        {% assign banner_button_text_key = 'banner_' | append: i | append: '_button_text' %}
+        {% assign banner_button_link_key = 'banner_' | append: i | append: '_button_link' %}
 
         {% assign banner_type = product.metafields.custom[banner_type_key] %}
         {% assign banner_image = product.metafields.custom[banner_image_key] %}
         {% assign banner_video = product.metafields.custom[banner_video_key] %}
         {% assign banner_heading = product.metafields.custom[banner_heading_key] %}
         {% assign banner_text = product.metafields.custom[banner_text_key] %}
+        {% assign banner_button_text = product.metafields.custom[banner_button_text_key] %}
+        {% assign banner_button_link = product.metafields.custom[banner_button_link_key] %}
 
         {% if banner_type != blank %}
           {% assign active_banners = active_banners | plus: 1 %}
@@ -35,6 +39,11 @@
               {% endif %}
               {% if banner_text != blank %}
                 <p style="font-size: {{ section.settings.text_font_size }}px;">{{ banner_text }}</p>
+              {% endif %}
+              {% if banner_button_text != blank and banner_button_link != blank %}
+                <a href="{{ banner_button_link}}" class="banner-btn">
+                  {{ banner_button_text }}
+                </a>
               {% endif %}
             </div>
           </div>
@@ -107,6 +116,25 @@
     border: none;
     padding: 0.5rem 1rem;
     z-index: 10;
+  }
+
+  .banner-btn {
+    border:1px solid #000;
+    display: inline-block;
+    margin-top: 1rem;
+    padding: 0.6rem 1.2rem;
+    background-color: #000;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 6px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+  }
+  
+  .banner-btn:hover {
+    border:1px solid #000;
+    background-color: #ffffff;
+    color: #000;
   }
 
   @media (max-width: 767px) {
